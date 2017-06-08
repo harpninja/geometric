@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+ 	<head>
+ 		<meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+		<title>8 point star</title>
+		<script src='https://d3js.org/d3.v4.min.js'></script>
+        <script src='constructors.js'></script>
+        <script src='draw.js'></script>
+        <script src='geometry.js'></script>
+        <link rel='stylesheet' href='style.css'>
+ 	</head>
+ 	<body>
+    <p>Eight point star design from <em>Islamic Geometric Design</em> by <a href='http://www.broug.com/'>Eric Broug</a>.</p>
+    <p>The code mimics how a compass was used by the traditional designers to draw the patterns.<br>
+    <a href='https://github.com/harpninja/geometric'>Code on GitHub</a>.</p>
+    <p> </p>
+    <script>
+    	'use strict';
+        const margin = {top: 20, right: 20, bottom: 20, left: 20};
+		const width = 600 - margin.left - margin.right;
+		const height = 600 - margin.top - margin.bottom;
+
+        const origin = {x : width/2, y : height/2};
+        const origin1 = {x : width/2 + 160, y : height/2};
+        const origin2 = {x : width/2 - 160, y : height/2};
+        const origin3 = {x : width/2, y : height/2 - 160};
+        const origin4 = {x : width/2, y : height/2 + 160};
+        const origin5 = {x : width/2 - 160, y : height/2 - 160};
+        const origin6 = {x : width/2 + 160, y : height/2 - 160};
+        const origin7 = {x : width/2 - 160 , y : height/2 + 160};
+        const origin8 = {x : width/2 + 160, y : height/2 + 160};
+
+        const line = d3.line()
+				.x(function(d) { return d.x; })
+				.y(function(d) { return d.y; });
+	
+		const svg = d3.select('body').append('svg')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom);
+
+		svg.append('rect')
+		    .attr('width', '100%')
+		    .attr('height', '100%')
+		    .attr('fill', '#ffffff');
+        
+        const template = fourfoldDesignTemplate(origin, svg);
+        const template1 = fourfoldDesignTemplate(origin1, svg);
+        const template2 = fourfoldDesignTemplate(origin2, svg);
+        const template3 = fourfoldDesignTemplate(origin3, svg);
+        const template4 = fourfoldDesignTemplate(origin4, svg);
+        const template5 = fourfoldDesignTemplate(origin5, svg);
+        const template6 = fourfoldDesignTemplate(origin6, svg);
+        const template7 = fourfoldDesignTemplate(origin7, svg);
+        const template8 = fourfoldDesignTemplate(origin8, svg);
+
+        eightPointStar(origin, template.inner, template.outer);
+        eightPointStar(origin1, template1.inner, template1.outer);
+        eightPointStar(origin2, template2.inner, template2.outer);
+        eightPointStar(origin3, template3.inner, template3.outer);
+        eightPointStar(origin4, template4.inner, template4.outer);
+        eightPointStar(origin5, template5.inner, template5.outer);
+        eightPointStar(origin6, template6.inner, template6.outer);
+        eightPointStar(origin7, template7.inner, template7.outer);
+        eightPointStar(origin8, template8.inner, template8.outer);
+
+        // octagon(origin, template.inner, template.outer);
+
+      
+
+        //------------------------------------
+        // Draw fourfold design template
+        //------------------------------------
+        function fourfoldDesignTemplate(origin, svg)
+        {
+            const circle0 = new Circle(origin, 0, 0, 80);
+            const circle1 = new Circle(origin, 0, -80, 80);
+            const circle2 = new Circle(origin, 80, 0, 80);
+            const circle3 = new Circle(origin, 0, 80, 80);
+            const circle4 = new Circle(origin, -80, 0, 80);
+        
+            const line_x_axis = new Line(origin, -200, 0, 200, 0);
+            const line_y_axis = new Line(origin, 0, -200, 0, 200);
+
+            drawLine(line_x_axis, svg, 'line');
+            drawLine(line_y_axis, svg, 'line');
+
+            drawCircle(circle0, svg, 'line');
+            drawCircle(circle1, svg, 'line');
+            drawCircle(circle2, svg, 'line');
+            drawCircle(circle3, svg, 'line');
+            drawCircle(circle4, svg, 'line');
+
+            // return an intersection point, name it and then draw it
+            // outer square points
+            let intersection1 = getIntersection(circle2, circle1, circle0);
+            let intersection2 = getIntersection(circle2, circle3, circle0);
+            let intersection3 = getIntersection(circle4, circle3, circle0);
+            let intersection4 = getIntersection(circle4, circle1, circle0);
+            drawCircle(intersection1, svg, 'dot');
+            drawCircle(intersection2, svg, 'dot');
+            drawCircle(intersection3, svg, 'dot');
+            drawCircle(intersection4, svg, 'dot');
+        
+            // outer square lines
+            const square_line1 = new Line(origin, intersection1.x, intersection1.y, intersection2.x, intersection2.y);
+            const square_line2 = new Line(origin, intersection2.x, intersection2.y, intersection3.x, intersection3.y);
+            const square_line3 = new Line(origin, intersection3.x, intersection3.y, intersection4.x, intersection4.y);
+            const square_line4 = new Line(origin, intersection4.x, intersection4.y, intersection1.x, intersection1.y);
+            drawLine(square_line1, svg, 'line');
+            drawLine(square_line2, svg, 'line');
+            drawLine(square_line3, svg, 'line');
+            drawLine(square_line4, svg, 'line');
+
+            // outer square halfway points
+            const square_halfway_point1 = getHalfwayPoint(square_line1);
+            drawCircle(square_halfway_point1, svg, 'dot');
+            const square_halfway_point2 = getHalfwayPoint(square_line2);
+            drawCircle(square_halfway_point2, svg, 'dot');
+            const square_halfway_point3 = getHalfwayPoint(square_line3);
+            drawCircle(square_halfway_point3, svg, 'dot');
+            const square_halfway_point4 = getHalfwayPoint(square_line4);
+            drawCircle(square_halfway_point4, svg, 'dot');
+
+            const outer_square_points = [intersection1,
+                                        square_halfway_point1, 
+                                        intersection2,
+                                        square_halfway_point2, 
+                                        intersection3,
+                                        square_halfway_point3, 
+                                        intersection4, square_halfway_point4];
+
+            // diagonal lines
+            const diagonal_line1 = new Line(origin, intersection1.x, intersection1.y, intersection3.x, intersection3.y);
+            const diagonal_line2 = new Line(origin, intersection2.x, intersection2.y, intersection4.x, intersection4.y);
+            drawLine(diagonal_line1, svg, 'line');
+            drawLine(diagonal_line2, svg, 'line');
+
+            // inner square points
+            const inner_intersection1 = intersectionLineCircle(diagonal_line1, circle0);
+            const inner_intersection2 = intersectionLineCircle(diagonal_line2, circle0);
+            const inner_square_point1 = inner_intersection1[1];
+            const inner_square_point2 = inner_intersection2[1];
+            const inner_square_point3 = inner_intersection1[0];
+            const inner_square_point4 = inner_intersection2[0];
+            drawCircle(inner_square_point1, svg, 'dot');
+            drawCircle(inner_square_point2, svg, 'dot');
+            drawCircle(inner_square_point3, svg, 'dot');
+            drawCircle(inner_square_point4, svg, 'dot');
+
+            // inner square lines
+            const inner_square_line1 = new Line(origin, inner_intersection1[0].x, inner_intersection1[0].y, inner_intersection2[0].x, inner_intersection2[0].y);
+            const inner_square_line2 = new Line(origin, inner_intersection1[1].x, inner_intersection1[1].y, inner_intersection2[1].x, inner_intersection2[1].y);
+            const inner_square_line3 = new Line(origin, inner_intersection2[0].x, inner_intersection2[0].y, inner_intersection1[1].x, inner_intersection1[1].y);
+            const inner_square_line4 = new Line(origin, inner_intersection1[0].x, inner_intersection1[0].y, inner_intersection2[1].x, inner_intersection2[1].y);
+            drawLine(inner_square_line1, svg, 'line');
+            drawLine(inner_square_line2, svg, 'line');
+            drawLine(inner_square_line3, svg, 'line');
+            drawLine(inner_square_line4, svg, 'line');
+
+            // inner square halfway points
+            let inner_square_points = [];
+            inner_square_points.push(inner_square_point1);  // 1
+            const inner_square_point2_2 = intersectionLineCircle(inner_square_line2, circle1);
+            addPointOnSquare(inner_square_points, inner_square_point2_2, inner_square_points, circle0);     // 1_1
+            const inner_square_point2_1 = intersectionLineCircle(inner_square_line2, circle3);
+            addPointOnSquare(inner_square_points, inner_square_point2_1, inner_square_points, circle0);     // 1_2
+            inner_square_points.push(inner_square_point2);  // 2
+            const inner_square_point3_1 = intersectionLineCircle(inner_square_line4, circle2);
+            addPointOnSquare(inner_square_points, inner_square_point3_1, inner_square_points, circle0);     // 2_1
+            const inner_square_point3_2 = intersectionLineCircle(inner_square_line4, circle4);
+            addPointOnSquare(inner_square_points, inner_square_point3_2, inner_square_points, circle0);     // 2_2
+            inner_square_points.push(inner_square_point3);  // 3
+            const inner_square_point4_1 = intersectionLineCircle(inner_square_line1, circle3);
+            addPointOnSquare(inner_square_points, inner_square_point4_1, inner_square_points, circle0);     // 3_1
+            const inner_square_point4_2 = intersectionLineCircle(inner_square_line1, circle1);
+            addPointOnSquare(inner_square_points, inner_square_point4_2, inner_square_points, circle0);     // 3_2
+            inner_square_points.push(inner_square_point4);  // 4
+            const inner_square_point1_1 = intersectionLineCircle(inner_square_line3, circle4);
+            addPointOnSquare(inner_square_points, inner_square_point1_1, inner_square_points, circle0);     // 4_1
+            const inner_square_point1_2 = intersectionLineCircle(inner_square_line3, circle2);
+            addPointOnSquare(inner_square_points, inner_square_point1_2, inner_square_points, circle0);     // 4_2
+
+            return {inner: inner_square_points, outer: outer_square_points};
+        }
+
+         /**
+		 * addPointOnSquare
+		 * @param {Array} array of Circle
+         * @param {Array} array of inner square halfway points (two on each line)
+		 */
+        function addPointOnSquare(square_points, point_array, inner_square_points_array, origin_circle)
+        {
+            for (let i=0; i < point_array.length; i++)
+            {
+                if (pointInCircle(point_array[i], origin_circle) == true)
+                {
+                    drawCircle(point_array[i], svg, 'dot');
+                    square_points.push(point_array[i]);
+                }
+            }
+        }
+
+        /**
+		 * eightPointStar
+		 * @param {Object} system origin
+         * @param {Array} inner square points, clockwise
+         * @param {Array} outer square points, clockwise
+		 */
+        function eightPointStar(origin, inner, outer)
+        {
+            let data = [];
+
+            data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
+            data.push({x : origin.x + inner[1].x, y: origin.y + inner[1].y});
+            data.push({x : origin.x + outer[1].x, y: origin.y + outer[1].y});
+            data.push({x : origin.x + inner[2].x, y: origin.y + inner[2].y});
+            data.push({x : origin.x + inner[3].x, y: origin.y + inner[3].y});
+            data.push({x : origin.x + inner[4].x, y: origin.y + inner[4].y});
+            data.push({x : origin.x + outer[3].x, y: origin.y + outer[3].y});
+            data.push({x : origin.x + inner[5].x, y: origin.y + inner[5].y});
+            data.push({x : origin.x + inner[6].x, y: origin.y + inner[6].y});
+            data.push({x : origin.x + inner[7].x, y: origin.y + inner[7].y});
+            data.push({x : origin.x + outer[5].x, y: origin.y + outer[5].y});
+            data.push({x : origin.x + inner[8].x, y: origin.y + inner[8].y});
+            data.push({x : origin.x + inner[9].x, y: origin.y + inner[9].y});
+            data.push({x : origin.x + inner[10].x, y: origin.y + inner[10].y});
+            data.push({x : origin.x + outer[7].x, y: origin.y + outer[7].y});
+            data.push({x : origin.x + inner[11].x, y: origin.y + inner[11].y});
+            data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
+        
+            drawPath(data, svg, 'line_blue');
+        }
+
+        /**
+		 * octagon
+		 * @param {Object} system origin
+         * @param {Array} inner square points, clockwise
+         * @param {Array} outer square points, clockwise
+		 */
+        function octagon(origin, inner, outer)
+        {
+            let data = [];
+
+            data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
+            data.push({x : origin.x + outer[1].x, y: origin.y + outer[1].y});
+            data.push({x : origin.x + inner[3].x, y: origin.y + inner[3].y});
+            data.push({x : origin.x + outer[3].x, y: origin.y + outer[3].y});
+            data.push({x : origin.x + inner[6].x, y: origin.y + inner[6].y});
+            data.push({x : origin.x + outer[5].x, y: origin.y + outer[5].y});
+            data.push({x : origin.x + inner[9].x, y: origin.y + inner[9].y});
+            data.push({x : origin.x + outer[7].x, y: origin.y + outer[7].y});
+            data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
+
+            drawPath(data, svg, 'line_blue');
+        }
+
+	</script>
+  </body>
+</html>

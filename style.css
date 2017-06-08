@@ -1,0 +1,45 @@
+body {
+    font-family: Verdana, sans-serif;
+    font-size: 8pt;
+    color: #555555;
+    background: #ffffff;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+a {
+    font-family: Verdana, sans-serif;
+    font-size: 8pt;
+    color: #555555;
+}
+
+.line {
+    fill: none;
+    stroke-width: 1px;
+    stroke: #cccccc;
+}
+
+.line_blue {
+    stroke-width: 2px;
+    stroke: darkblue;
+    fill: blue;
+    fill-opacity: 0.6;
+}
+
+.line_orange {
+    fill: none;
+    stroke-width: 1px;
+    stroke: orangered;
+}
+
+.dot {
+    fill: #cccccc;
+    stroke-width: 1px;
+    stroke: #cccccc;
+}
+
+.dot_orange {
+    fill: orangered;
+    stroke-width: 4px;
+    stroke: orangered;
+}
