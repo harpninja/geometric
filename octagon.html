@@ -2,7 +2,7 @@
 <html>
  	<head>
  		<meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
-		<title>8 point star</title>
+		<title>Octagon</title>
 		<script src='https://d3js.org/d3.v4.min.js'></script>
         <script src='constructors.js'></script>
         <script src='draw.js'></script>
@@ -11,7 +11,7 @@
         <link rel='stylesheet' href='style.css'>
  	</head>
  	<body>
-    <p>Eight point star design from <em>Islamic Geometric Design</em> by <a href='http://www.broug.com/'>Eric Broug</a>.</p>
+    <p>Octagon design from <em>Islamic Geometric Design</em> by <a href='http://www.broug.com/'>Eric Broug</a>.</p>
     <p>The code mimics how a compass was used by the traditional designers to draw the patterns.<br>
     <a href='https://github.com/harpninja/geometric'>Code on GitHub</a>.</p>
     <p> </p>
@@ -58,41 +58,33 @@
         const template7 = fourfoldDesignTemplate(origin7, svg);
         const template8 = fourfoldDesignTemplate(origin8, svg);
 
-		eightPointStar(origin, template.inner, template.outer);
-        eightPointStar(origin1, template1.inner, template1.outer);
-        eightPointStar(origin2, template2.inner, template2.outer);
-        eightPointStar(origin3, template3.inner, template3.outer);
-        eightPointStar(origin4, template4.inner, template4.outer);
-        eightPointStar(origin5, template5.inner, template5.outer);
-        eightPointStar(origin6, template6.inner, template6.outer);
-        eightPointStar(origin7, template7.inner, template7.outer);
-        eightPointStar(origin8, template8.inner, template8.outer);
+		octagon(origin, template.inner, template.outer);
+		octagon(origin1, template1.inner, template1.outer);
+        octagon(origin2, template2.inner, template2.outer);
+        octagon(origin3, template3.inner, template3.outer);
+        octagon(origin4, template4.inner, template4.outer);
+        octagon(origin5, template5.inner, template5.outer);
+        octagon(origin6, template6.inner, template6.outer);
+        octagon(origin7, template7.inner, template7.outer);
+        octagon(origin8, template8.inner, template8.outer);
 
         /**
-		 * eightPointStar
+		 * octagon
 		 * @param {Object} system origin
          * @param {Array} inner square points, clockwise
          * @param {Array} outer square points, clockwise
 		 */
-        function eightPointStar(origin, inner, outer)
+        function octagon(origin, inner, outer)
         {
             let data = [];
             data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
-            data.push({x : origin.x + inner[1].x, y: origin.y + inner[1].y});
             data.push({x : origin.x + outer[1].x, y: origin.y + outer[1].y});
-            data.push({x : origin.x + inner[2].x, y: origin.y + inner[2].y});
             data.push({x : origin.x + inner[3].x, y: origin.y + inner[3].y});
-            data.push({x : origin.x + inner[4].x, y: origin.y + inner[4].y});
             data.push({x : origin.x + outer[3].x, y: origin.y + outer[3].y});
-            data.push({x : origin.x + inner[5].x, y: origin.y + inner[5].y});
             data.push({x : origin.x + inner[6].x, y: origin.y + inner[6].y});
-            data.push({x : origin.x + inner[7].x, y: origin.y + inner[7].y});
             data.push({x : origin.x + outer[5].x, y: origin.y + outer[5].y});
-            data.push({x : origin.x + inner[8].x, y: origin.y + inner[8].y});
             data.push({x : origin.x + inner[9].x, y: origin.y + inner[9].y});
-            data.push({x : origin.x + inner[10].x, y: origin.y + inner[10].y});
             data.push({x : origin.x + outer[7].x, y: origin.y + outer[7].y});
-            data.push({x : origin.x + inner[11].x, y: origin.y + inner[11].y});
             data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
             drawPath(data, svg, 'line_blue');
         }

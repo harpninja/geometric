@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+ 	<head>
+ 		<meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+		<title>8 point star with rays</title>
+		<script src='https://d3js.org/d3.v4.min.js'></script>
+        <script src='constructors.js'></script>
+        <script src='draw.js'></script>
+        <script src='geometry.js'></script>
+		<script src='fourfold-template.js'></script>
+        <link rel='stylesheet' href='style.css'>
+ 	</head>
+ 	<body>
+    <p>Eight point star with rays design from <em>Islamic Geometric Design</em> by <a href='http://www.broug.com/'>Eric Broug</a>.</p>
+    <p>The code mimics how a compass was used by the traditional designers to draw the patterns.<br>
+    <a href='https://github.com/harpninja/geometric'>Code on GitHub</a>.</p>
+    <p> </p>
+    <script>
+    	'use strict';
+		const tcr = 80;					// template circle radius
+		const tcd = tcr * 2; 			// template circle diameter
+		const axis_length = tcd + 40;	// length of x and y axis lines
+
+        const margin = {top: 20, right: 20, bottom: 20, left: 20};
+		const width = 600 - margin.left - margin.right;
+		const height = 600 - margin.top - margin.bottom;
+
+		const line = d3.line()
+				.x(function(d) { return d.x; })
+				.y(function(d) { return d.y; });
+
+		const svg = d3.select('body').append('svg')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom);
+
+		svg.append('rect')
+		    .attr('width', '100%')
+		    .attr('height', '100%')
+		    .attr('fill', '#ffffff');
+
+        const origin = {x : width/2, y : height/2};
+        const origin1 = {x : width/2 + tcd, y : height/2};
+        const origin2 = {x : width/2 - tcd, y : height/2};
+        const origin3 = {x : width/2, y : height/2 - tcd};
+        const origin4 = {x : width/2, y : height/2 + tcd};
+
+        const template = fourfoldDesignTemplate(origin, svg);
+        const template1 = fourfoldDesignTemplate(origin1, svg);
+        const template2 = fourfoldDesignTemplate(origin2, svg);
+        const template3 = fourfoldDesignTemplate(origin3, svg);
+        const template4 = fourfoldDesignTemplate(origin4, svg);
+
+		eightPointStarRay1(origin, origin1, template.inner, template.outer, template1.inner);
+		eightPointStarRay2(origin, origin1, template.inner, template.outer, template1.inner);
+		eightPointStarRay3(origin, origin2, template.inner, template.outer, template2.inner);
+		eightPointStarRay4(origin, origin2, template.inner, template.outer, template2.inner);
+		eightPointStarRay5(origin, origin3, template.inner, template.outer, template3.inner);
+		eightPointStarRay6(origin, origin3, template.inner, template.outer, template3.inner);
+		eightPointStarRay7(origin, origin4, template.inner, template.outer, template3.inner);
+		eightPointStarRay8(origin, origin4, template.inner, template.outer, template3.inner);
+
+		eightPointStar(origin, template.inner, template.outer);
+
+        /**
+		 * eightPointStar
+		 * @param {Object} system origin
+         * @param {Array} inner square points, clockwise
+         * @param {Array} outer square points, clockwise
+		 */
+        function eightPointStar(origin, inner, outer)
+        {
+            let data = [];
+            data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
+            data.push({x : origin.x + inner[1].x, y: origin.y + inner[1].y});
+            data.push({x : origin.x + outer[1].x, y: origin.y + outer[1].y});
+            data.push({x : origin.x + inner[2].x, y: origin.y + inner[2].y});
+            data.push({x : origin.x + inner[3].x, y: origin.y + inner[3].y});
+            data.push({x : origin.x + inner[4].x, y: origin.y + inner[4].y});
+            data.push({x : origin.x + outer[3].x, y: origin.y + outer[3].y});
+            data.push({x : origin.x + inner[5].x, y: origin.y + inner[5].y});
+            data.push({x : origin.x + inner[6].x, y: origin.y + inner[6].y});
+            data.push({x : origin.x + inner[7].x, y: origin.y + inner[7].y});
+            data.push({x : origin.x + outer[5].x, y: origin.y + outer[5].y});
+            data.push({x : origin.x + inner[8].x, y: origin.y + inner[8].y});
+            data.push({x : origin.x + inner[9].x, y: origin.y + inner[9].y});
+            data.push({x : origin.x + inner[10].x, y: origin.y + inner[10].y});
+            data.push({x : origin.x + outer[7].x, y: origin.y + outer[7].y});
+            data.push({x : origin.x + inner[11].x, y: origin.y + inner[11].y});
+            data.push({x : origin.x + inner[0].x, y: origin.y + inner[0].y});
+            drawPath(data, svg, 'line_blue');
+        }
+
+		/**
+		 * eightPointStarRay1 -> eightPointStarRay8
+		 * @param {Object} system origin 1
+		 * @param {Object} system origin 2
+         * @param {Array} inner square points 1, clockwise
+         * @param {Array} outer square points 1, clockwise
+		 * @param {Array} inner square points 2, clockwise
+		 */
+		function eightPointStarRay1(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + inner1[0].x, y: origin1.y + inner1[0].y});
+			data.push({x : origin2.x + inner2[10].x, y: origin2.y + inner2[10].y});
+			data.push({x : origin1.x + outer1[1].x, y: origin1.y + outer1[1].y});
+			data.push({x : origin1.x + inner1[1].x, y: origin1.y + inner1[1].y});
+			data.push({x : origin1.x + inner1[0].x, y: origin1.y + inner1[0].y});
+			drawPath(data, svg, 'line_orange');
+		}
+
+		function eightPointStarRay2(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + outer1[1].x, y: origin1.y + outer1[1].y});
+			data.push({x : origin2.x + inner2[5].x, y: origin2.y + inner2[5].y});
+			data.push({x : origin1.x + inner1[3].x, y: origin1.y + inner1[3].y});
+			data.push({x : origin1.x + inner1[2].x, y: origin1.y + inner1[2].y});
+			data.push({x : origin1.x + outer1[1].x, y: origin1.y + outer1[1].y});
+			drawPath(data, svg, 'line_orange');
+		}
+
+		function eightPointStarRay3(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + outer1[5].x, y: origin1.y + outer1[5].y});
+			data.push({x : origin2.x + inner2[4].x, y: origin2.y + inner2[4].y});
+			data.push({x : origin1.x + inner1[6].x, y: origin1.y + inner1[6].y});
+			data.push({x : origin1.x + inner1[7].x, y: origin1.y + inner1[7].y});
+			data.push({x : origin1.x + outer1[5].x, y: origin1.y + outer1[5].y});
+			drawPath(data, svg, 'line_orange');
+		}
+
+		function eightPointStarRay4(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + outer1[5].x, y: origin1.y + outer1[5].y});
+			data.push({x : origin1.x + inner1[8].x, y: origin1.y + inner1[8].y});
+			data.push({x : origin1.x + inner1[9].x, y: origin1.y + inner1[9].y});
+			data.push({x : origin2.x + inner2[11].x, y: origin2.y + inner2[11].y});
+			data.push({x : origin1.x + outer1[5].x, y: origin1.y + outer1[5].y});
+			drawPath(data, svg, 'line_orange');
+		}
+
+		function eightPointStarRay5(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + inner1[9].x, y: origin1.y + inner1[9].y});
+			data.push({x : origin1.x + inner1[10].x, y: origin1.y + inner1[10].y});
+			data.push({x : origin1.x + outer1[7].x, y: origin1.y + outer1[7].y});
+			data.push({x : origin2.x + inner2[7].x, y: origin2.y + inner2[7].y});
+			data.push({x : origin1.x + inner1[9].x, y: origin1.y + inner1[9].y});
+			drawPath(data, svg, 'line_orange');
+		}
+
+		function eightPointStarRay6(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + outer1[7].x, y: origin1.y + outer1[7].y});
+			data.push({x : origin1.x + inner1[11].x, y: origin1.y + inner1[11].y});
+			data.push({x : origin1.x + inner1[0].x, y: origin1.y + inner1[0].y});
+			data.push({x : origin2.x + inner2[2].x, y: origin2.y + inner2[2].y});
+			data.push({x : origin1.x + outer1[7].x, y: origin1.y + outer1[7].y});
+			drawPath(data, svg, 'line_orange');
+		}
+
+		function eightPointStarRay7(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + inner1[3].x, y: origin1.y + inner1[3].y});
+			data.push({x : origin1.x + inner1[4].x, y: origin1.y + inner1[4].y});
+			data.push({x : origin1.x + outer1[3].x, y: origin1.y + outer1[3].y});
+			data.push({x : origin2.x + inner2[1].x, y: origin2.y + inner2[1].y});
+			data.push({x : origin1.x + inner1[3].x, y: origin1.y + inner1[3].y});
+			drawPath(data, svg, 'line_orange');
+		}
+
+		function eightPointStarRay8(origin1, origin2, inner1, outer1, inner2)
+		{
+			let data = [];
+			data.push({x : origin1.x + outer1[3].x, y: origin1.y + outer1[3].y});
+			data.push({x : origin1.x + inner1[5].x, y: origin1.y + inner1[5].y});
+			data.push({x : origin1.x + inner1[6].x, y: origin1.y + inner1[6].y});
+			data.push({x : origin2.x + inner2[8].x, y: origin2.y + inner2[8].y});
+			data.push({x : origin1.x + outer1[3].x, y: origin1.y + outer1[3].y});
+			drawPath(data, svg, 'line_orange');
+		}
+	</script>
+  </body>
+</html>
