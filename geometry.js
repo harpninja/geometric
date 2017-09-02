@@ -52,6 +52,44 @@ function getHalfwayPoint(line)
 }
 
 /**
+ * getEndPointY
+ * Find the Y component of end point of a line y = mx + b
+ * @param {Object} point 1
+ * @param {Object} point 2
+ * @param {Number} template circle radius
+ * @returns {Object} new end point = actual y value for known x and known gradient
+ */
+function getEndPointY(point1, point2, tcr, origin)
+{
+    const y_difference = point2.y - point1.y;   // numerator
+    const x_difference = point2.x - point1.x;   // denominator
+    const m = y_difference / x_difference;      // gradient
+    const b = point2.y - (m * point2.x);        // y intercept
+    const any_y = (m * tcr) + b;                // actual y value for known x and known gradient
+    const end_point = new Circle(origin, tcr, any_y, 2);    // end point object
+    return end_point;
+}
+
+/**
+ * getEndPointX
+ * Find the X component of end point of a line y = mx + b
+ * @param {Object} point 1
+ * @param {Object} point 2
+ * @param {Number} template circle radius
+ * @returns {Object} new end point = actual x value for known y and known gradient
+ */
+function getEndPointX(point1, point2, tcr, origin)
+{
+    const y_difference = point2.y - point1.y;   // numerator
+    const x_difference = point2.x - point1.x;   // denominator
+    const m = y_difference / x_difference;      // gradient
+    const b = point2.y - (m * point2.x);        // calculate b from known point and gradient
+    const any_x = -(b / m) + (tcr / m);         // actual x value for known y and known gradient
+    const end_point = new Circle(origin, any_x, tcr, 2);    // end point object
+    return end_point;
+}
+
+/**
  * intersectionLineCircle
  * @param {Object} line
  * @param {Object} circle

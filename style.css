@@ -29,8 +29,40 @@ a {
 .line_orange {
     stroke-width: 2px;
     stroke: orangered;
-	fill: orangered;
+    fill: orangered;
     fill-opacity: 0.6;
+}
+
+.line_black {
+    stroke-width: 2px;
+    stroke: black;
+    fill: black;
+    fill-opacity: 1;
+}
+
+.fill_blue {
+    fill: blue;
+    fill-opacity: 0.4;
+}
+
+.fill_green {
+    fill: mediumseagreen;
+    fill-opacity: 0.4;
+}
+
+.fill_orange {
+    fill: orangered;
+    fill-opacity: 0.4;
+}
+
+.fill_purple {
+    fill: mediumorchid;
+    fill-opacity: 0.4;
+}
+
+.fill_yellow {
+    fill: gold;
+    fill-opacity: 0.4;
 }
 
 .dot {

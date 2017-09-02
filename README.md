@@ -4,3 +4,4 @@ An article by [Paul Bourke](http://paulbourke.net/geometry/circlesphere/) was ve
 Other designs:
 * [Eight point star with rays](http://www.animatedcreations.net/d3/geometric/8_point_star_rays.html).
 * [Octagon](http://www.animatedcreations.net/d3/geometric/octagon.html).
+* [Fourfold pattern 3](http://www.animatedcreations.net/d3/geometric/fourfold_pattern_3.html).

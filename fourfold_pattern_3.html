@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+ 	<head>
+ 		<meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+		<title>fourfold pattern 3</title>
+		<script src='https://d3js.org/d3.v4.min.js'></script>
+        <script src='constructors.js'></script>
+        <script src='draw.js'></script>
+        <script src='geometry.js'></script>
+		<script src='fourfold-template-2.js'></script>
+        <link rel='stylesheet' href='style.css'>
+ 	</head>
+ 	<body>
+    <p>Fourfold pattern 3 (p214) from <em>Islamic Geometric Design</em> by <a href='http://www.broug.com/'>Eric Broug</a>.</p>
+    <p>The code mimics how a compass was used by the traditional designers to draw the patterns.<br>
+    <a href='https://github.com/harpninja/geometric'>Code on GitHub</a>.</p>
+    <p> </p>
+    <script>
+    	'use strict';
+		const tcr = 80;					// template circle radius
+		const tcd = tcr * 2; 			// template circle diameter
+		const axis_length = tcd + 40;	// length of x and y axis lines
+
+        const margin = {top: 20, right: 20, bottom: 20, left: 20};
+		const width = 600 - margin.left - margin.right;
+		const height = 600 - margin.top - margin.bottom;
+
+		const line = d3.line()
+				.x(function(d) { return d.x; })
+				.y(function(d) { return d.y; });
+
+		const svg = d3.select('body').append('svg')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom);
+
+		svg.append('rect')
+		    .attr('width', '100%')
+		    .attr('height', '100%')
+		    .attr('fill', '#ffffff');
+
+        const origin = {x : width/2, y : height/2};
+        const origin1 = {x : width/2 + tcd, y : height/2};
+        const origin2 = {x : width/2 - tcd, y : height/2};
+        const origin3 = {x : width/2, y : height/2 - tcd};
+        const origin4 = {x : width/2, y : height/2 + tcd};
+        const origin5 = {x : width/2 - tcd, y : height/2 - tcd};
+        const origin6 = {x : width/2 + tcd, y : height/2 - tcd};
+        const origin7 = {x : width/2 - tcd , y : height/2 + tcd};
+        const origin8 = {x : width/2 + tcd, y : height/2 + tcd};
+
+        const template = fourfoldDesignTemplate2(origin, svg, tcr);     // middle row, centre
+        const template1 = fourfoldDesignTemplate2(origin1, svg, tcr);   // middle row, E
+        const template2 = fourfoldDesignTemplate2(origin2, svg, tcr);   // middle row, W
+        const template3 = fourfoldDesignTemplate2(origin3, svg, tcr);   // top row, centre
+        const template4 = fourfoldDesignTemplate2(origin4, svg, tcr);   // bottom row, centre
+        const template5 = fourfoldDesignTemplate2(origin5, svg, tcr);   // top row, W
+        const template6 = fourfoldDesignTemplate2(origin6, svg, tcr);   // top row, E
+        const template7 = fourfoldDesignTemplate2(origin7, svg, tcr);   // bottom row, E
+        const template8 = fourfoldDesignTemplate2(origin8, svg, tcr);   // bottom row, W
+
+		shape(origin, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin1, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin2, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin3, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin4, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin5, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin6, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin7, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+        shape(origin8, template.vertical, template.horizontal, template.halfway, 'fill_blue');
+
+        shape1(origin, origin1, template.vertical, template.horizontal, template.halfway, 'fill_orange');
+        shape1(origin2, origin, template.vertical, template.horizontal, template.halfway, 'fill_orange');
+        shape1(origin4, origin8, template.vertical, template.horizontal, template.halfway, 'fill_orange');
+        shape1(origin7, origin4, template.vertical, template.horizontal, template.halfway, 'fill_orange');
+        shape1(origin5, origin3, template.vertical, template.horizontal, template.halfway, 'fill_orange');
+        shape1(origin3, origin6, template.vertical, template.horizontal, template.halfway, 'fill_orange');
+
+        shape2(origin, origin1, origin3, origin6, template.vertical, template.horizontal, template.halfway, 'fill_purple')
+        shape2(origin2, origin, origin5, origin3, template.vertical, template.horizontal, template.halfway, 'fill_purple')
+        shape2(origin7, origin4, origin2, origin, template.vertical, template.horizontal, template.halfway, 'fill_purple')
+        shape2(origin4, origin8, origin, origin1, template.vertical, template.horizontal, template.halfway, 'fill_purple')
+
+        shape3(origin, origin4, template.vertical, template.horizontal, template.halfway, 'fill_yellow')
+        shape3(origin1, origin8, template.vertical, template.horizontal, template.halfway, 'fill_yellow')
+        shape3(origin2, origin7, template.vertical, template.horizontal, template.halfway, 'fill_yellow')
+        shape3(origin3, origin, template.vertical, template.horizontal, template.halfway, 'fill_yellow')
+        shape3(origin6, origin1, template.vertical, template.horizontal, template.halfway, 'fill_yellow')
+        shape3(origin5, origin2, template.vertical, template.horizontal, template.halfway, 'fill_yellow')
+
+        mortar(origin, template.vertical, template.horizontal);
+        mortar(origin1, template.vertical, template.horizontal);
+        mortar(origin2, template.vertical, template.horizontal);
+        mortar(origin3, template.vertical, template.horizontal);
+        mortar(origin4, template.vertical, template.horizontal);
+        mortar(origin5, template.vertical, template.horizontal);
+        mortar(origin6, template.vertical, template.horizontal);
+        mortar(origin7, template.vertical, template.horizontal);
+        mortar(origin8, template.vertical, template.horizontal);
+
+        /**
+         * mortar - draw lines between the tiles
+         * @param {Object} system origin
+         * @param {Array}  vertical line points
+         * @param {Array} horizontal line points
+         */
+        function mortar(origin, vertical, horizontal)
+        {
+            const vertical1 = new Line(origin, vertical[0].x, vertical[0].y, vertical[1].x, vertical[1].y);
+            drawLine(vertical1, svg, 'line_black');
+            const vertical2 = new Line(origin, vertical[1].x, vertical[1].y, vertical[2].x, vertical[2].y);
+            drawLine(vertical2, svg, 'line_black');
+            const vertical3 = new Line(origin, vertical[3].x, vertical[3].y, vertical[4].x, vertical[4].y);
+            drawLine(vertical3, svg, 'line_black');
+            const vertical4 = new Line(origin, vertical[4].x, vertical[4].y, vertical[5].x, vertical[5].y);
+            drawLine(vertical4, svg, 'line_black');
+
+            const horizontal1 = new Line(origin, horizontal[0].x, horizontal[0].y, horizontal[1].x, horizontal[1].y);
+            drawLine(horizontal1, svg, 'line_black');
+            const horizontal2 = new Line(origin, horizontal[1].x, horizontal[1].y, horizontal[2].x, horizontal[2].y);
+            drawLine(horizontal2, svg, 'line_black');
+            const horizontal3 = new Line(origin, horizontal[3].x, horizontal[3].y, horizontal[4].x, horizontal[4].y);
+            drawLine(horizontal3, svg, 'line_black');
+            const horizontal4 = new Line(origin, horizontal[4].x, horizontal[4].y, horizontal[5].x, horizontal[5].y);
+            drawLine(horizontal4, svg, 'line_black');
+        }
+
+         /**
+         * shape - vertical original
+         * @param {Object} system origin
+         * @param {Array}  vertical line points
+         * @param {Array} horizontal line points
+         * @param {Array} halfway line points
+         */
+        function shape(origin, vertical, horizontal, halfway, colour)
+        {
+            let data = [];
+            data.push({x : origin.x + halfway[3].x, y: origin.y + halfway[3].y});
+            data.push({x : origin.x + vertical[1].x, y: origin.y + vertical[1].y});
+            data.push({x : origin.x + halfway[0].x, y: origin.y + halfway[0].y});
+            data.push({x : origin.x + horizontal[1].x, y: origin.y + horizontal[1].y});
+            data.push({x : origin.x + halfway[1].x, y: origin.y + halfway[1].y});
+            data.push({x : origin.x + vertical[4].x, y: origin.y + vertical[4].y});
+            data.push({x : origin.x + halfway[2].x, y: origin.y + halfway[2].y});
+            data.push({x : origin.x + horizontal[4].x, y: origin.y + horizontal[4].y});
+            data.push({x : origin.x + halfway[3].x, y: origin.y + halfway[3].y});
+            drawPath(data, svg, colour);
+        }
+
+        /**
+         * shape - horizontal half-half - W, E
+         * @param {Object} system origin
+         * @param {Array}  vertical line points
+         * @param {Array} horizontal line points
+         * @param {Array} halfway line points
+         */
+        function shape1(origin, origin1, vertical, horizontal, halfway, colour)
+        {
+            let data = [];
+            data.push({x : origin.x + halfway[3].x, y: origin.y + halfway[3].y});
+            data.push({x : origin.x + vertical[1].x, y: origin.y + vertical[1].y});
+            data.push({x : origin.x + halfway[0].x, y: origin.y + halfway[0].y});
+            data.push({x : origin.x + horizontal[0].x, y: origin.y + horizontal[0].y});
+            data.push({x : origin1.x + halfway[1].x, y: origin1.y + halfway[1].y});
+            data.push({x : origin1.x + vertical[4].x, y: origin1.y + vertical[4].y});
+            data.push({x : origin1.x + halfway[2].x, y: origin1.y + halfway[2].y});
+            data.push({x : origin.x + horizontal[5].x, y: origin.y + horizontal[5].y});
+            data.push({x : origin.x + halfway[3].x, y: origin.y + halfway[3].y});
+            drawPath(data, svg, colour);
+        }
+
+         /**
+         * shape - vertical offset - SW, SE, NW, NE
+         * @param {Object} system origin
+         * @param {Array}  vertical line points
+         * @param {Array} horizontal line points
+         * @param {Array} halfway line points
+         */
+        function shape2(origin, origin1, origin2, origin3, vertical, horizontal, halfway, colour)
+        {
+            let data = [];
+            data.push({x : origin3.x + halfway[1].x, y: origin3.y + halfway[1].y});
+            data.push({x : origin3.x + vertical[3].x, y: origin3.y + vertical[3].y});
+            data.push({x : origin1.x + halfway[2].x, y: origin1.y + halfway[2].y});
+            data.push({x : origin1.x + horizontal[3].x, y: origin1.y + horizontal[3].y});
+            data.push({x : origin.x + halfway[3].x, y: origin.y + halfway[3].y});
+            data.push({x : origin.x + vertical[0].x, y: origin.y + vertical[0].y});
+            data.push({x : origin2.x + halfway[0].x, y: origin2.y + halfway[0].y});
+            data.push({x : origin2.x + horizontal[0].x, y: origin2.y + horizontal[0].y});
+            data.push({x : origin3.x + halfway[1].x, y: origin3.y + halfway[1].y});
+            drawPath(data, svg, colour);
+        }
+
+        /**
+         * shape - horizontal offset - N, S
+         * @param {Object} system origin
+         * @param {Array}  vertical line points
+         * @param {Array} horizontal line points
+         * @param {Array} halfway line points
+         */
+        function shape3(origin, origin1, vertical, horizontal, halfway, colour)
+        {
+            let data = [];
+            data.push({x : origin.x + halfway[0].x, y: origin.y + halfway[0].y});
+            data.push({x : origin.x + vertical[2].x, y: origin.y + vertical[2].y});
+            data.push({x : origin1.x + halfway[3].x, y: origin1.y + halfway[3].y});
+            data.push({x : origin1.x + horizontal[4].x, y: origin1.y + horizontal[4].y});
+            data.push({x : origin1.x + halfway[2].x, y: origin1.y + halfway[2].y});
+            data.push({x : origin1.x + vertical[5].x, y: origin1.y + vertical[5].y});
+            data.push({x : origin.x + halfway[1].x, y: origin.y + halfway[1].y});
+            data.push({x : origin.x + horizontal[1].x, y: origin.y + horizontal[1].y});
+            data.push({x : origin.x + halfway[0].x, y: origin.y + halfway[0].y});
+            drawPath(data, svg, colour);
+        }
+	</script>
+  </body>
+</html>

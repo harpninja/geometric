@@ -43,7 +43,7 @@ function drawLine(line, svg, style)
 function drawPath(data, svg, style)
 {
     const path = svg.append('path')
-            .attr('class', style)
-            .attr('d', line(data));
+                    .attr('class', style)
+                    .attr('d', line(data));
     return path;
 }
